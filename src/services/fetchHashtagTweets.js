@@ -1,5 +1,6 @@
 const abortcontroller = new AbortController();
 const signal = abortcontroller.signal;
+const backendBaseUrl = process.env.REACT_APP_BACKEND_BASE_URL;
 
 const fetchAPI = async (url, payload) => {
   const response = await fetch(url, payload);
@@ -12,9 +13,7 @@ async function fetchHashtagTweets(
   target_hashtag,
   setError
 ) {
-  //   const [data, setData] = useState({ nodes: [], links: [] });
-  //   const [hasError, setErrors] = useState(false);
-  const url = "http://localhost/get-tweets-for-hashtag";
+  const url = backendBaseUrl + "/get-tweets-for-hashtag";
   const requestBody = {
     hashtags: hashtags.split(" "),
     target_hashtag: target_hashtag,

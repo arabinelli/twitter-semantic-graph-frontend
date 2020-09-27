@@ -1,5 +1,6 @@
 const abortcontroller = new AbortController();
 const signal = abortcontroller.signal;
+const backendBaseUrl = process.env.REACT_APP_BACKEND_BASE_URL;
 
 const fetchAPI = async (url, payload) => {
   const response = await fetch(url, payload);
@@ -7,7 +8,7 @@ const fetchAPI = async (url, payload) => {
 };
 
 async function fetchGraphData(hashtags, language, setError) {
-  const url = "http://localhost/get-graph";
+  const url = backendBaseUrl + "/get-graph";
   const requestBody = {
     hashtags: hashtags.split(" "),
   };
