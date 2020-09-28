@@ -57,13 +57,25 @@ function App() {
     event.preventDefault();
     setFormIsSubmitted(true);
     toggleDrawer();
-    setInputedHashtag(typedHashtag);
-    setInputedLanguage(language);
-    let data = await fetchGraphData(typedHashtag, language, setError).then(
-      (data) => {
-        return data;
-      }
+    setInputedHashtag(
+      typedHashtag.split(" ").map((item) => {
+        return item.startsWith("#")
+          ? item.replace("\n", "")
+          : "#" + item.replace("\n", "");
+      })
     );
+    setInputedLanguage(language);
+    let data = await fetchGraphData(
+      typedHashtag.split(" ").map((item) => {
+        return item.startsWith("#")
+          ? item.replace("\n", "")
+          : "#" + item.replace("\n", "");
+      }),
+      language,
+      setError
+    ).then((data) => {
+      return data;
+    });
     setGraphData(data);
     setDataLoaded(true);
   };

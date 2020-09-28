@@ -1,0 +1,13 @@
+.graph-title {
+  color: #1d3557;
+  background: #b1d3d7;
+  padding: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  font-weight: 600;
+  display: inline-block;
+  right: 0px;
+  width: auto;
+  position: absolute;
+}

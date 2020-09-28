@@ -6,6 +6,7 @@ import { useState, useGlobal } from "reactn";
 import TweetModal from "./components/tweetsModal/tweetsModal";
 import TopicController from "./components/topicController/topicController";
 import fetchHashtagTweets from "./services/fetchHashtagTweets";
+import GraphTitle from "./components/graphTitle/graphTitle";
 
 const MainScreen = (props) => {
   const [isTweetModalOpen, setTweetModalOpen] = useState(false);
@@ -82,11 +83,18 @@ const MainScreen = (props) => {
     setNewCommunityValue(1);
   };
 
+  console.log(inputedHashtag);
+
   return (
     <>
       {props.formIsSubmitted ? (
         props.dataHasLoaded ? (
           <div>
+            {inputedHashtag.length === 1 ? (
+              <GraphTitle hashtag={inputedHashtag[0]} />
+            ) : (
+              <div></div>
+            )}
             <NetworkViz
               data={props.graphData}
               communities={props.communities}
