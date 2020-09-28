@@ -14,8 +14,11 @@ async function fetchHashtagTweets(
   setError
 ) {
   const url = backendBaseUrl + "/get-tweets-for-hashtag";
+  const hashtagsList = hashtags.split(" ");
   const requestBody = {
-    hashtags: hashtags.split(" "),
+    hashtags: hashtagsList.map((item) => {
+      return item.startsWith("#") ? item : "#" + item;
+    }),
     target_hashtag: target_hashtag,
   };
 
