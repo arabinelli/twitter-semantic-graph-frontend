@@ -10,8 +10,11 @@ const fetchAPI = async (url, payload) => {
 async function fetchGraphData(hashtags, language, setError) {
   console.log(backendBaseUrl);
   const url = backendBaseUrl + "/get-graph";
+  const hashtagsList = hashtags.split(" ");
   const requestBody = {
-    hashtags: hashtags.split(" "),
+    hashtags: hashtagsList.map((item) => {
+      return item.startsWith("#") ? item : "#" + item;
+    }),
   };
 
   if (language !== "") {
