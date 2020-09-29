@@ -50,7 +50,7 @@ const AppHeader = (props) => {
           {props.isMenuOpen ? <MenuOpenIcon /> : <MenuIcon />}
         </IconButton>
         <Typography variant="h5" className={classes.title}>
-          Twitter Hashtag Mapper
+          Semantic Hashtag Mapper
         </Typography>
         <Button color="inherit" onClick={handleGetInTouch}>
           Get in touch!
