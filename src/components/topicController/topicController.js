@@ -1,25 +1,7 @@
 import React, { useState } from "react";
-// import { Typography, Slider } from "@material-ui/core";
 import "./topicController.css";
 
-// import { makeStyles } from "@material-ui/core/styles";
-
 const TopicController = (props) => {
-  // const [showExtendedTopics, setShowExtendedTopics] = useState(false);
-
-  // const useStyles = makeStyles((theme) => ({
-  //   inputFields: {
-  //     margin: theme.spacing(2),
-  //     marginTop: theme.spacing(3),
-  //   },
-  // }));
-
-  // const classes = useStyles();
-
-  // const handleButtonClick = () => {
-  //   setShowExtendedTopics(!showExtendedTopics);
-  // };
-
   return props.showExtendedTopics ? (
     <div className="topic-controller">
       <div id="topic-controller-head">
