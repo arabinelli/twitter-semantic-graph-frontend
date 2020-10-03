@@ -2,7 +2,7 @@ import React from "react";
 import "./tweetsModal.css";
 import TweetCard from "./tweetCard/tweetCard";
 import { Ring } from "react-spinners-css";
-import { TwitterTweetEmbed } from "react-twitter-embed";
+import { Tweet } from "react-twitter-widgets";
 
 const TweetModal = (props) => {
   const showHideClassName = props.isModalOpen
@@ -26,13 +26,19 @@ const TweetModal = (props) => {
             </div>
             <div className="tweet-modal-main body">
               {props.tweets.map((item) => {
+                console.log(item.key);
                 return (
-                  // <TwitterTweetEmbed tweetId={String(item.key)} />
+                  // <Tweet
+                  //   tweetId={item.key}
+                  //   options={{ width: "inherit" }}
+                  // />
                   <TweetCard
                     accountName={item.username}
-                    accountHandle={item.userhandle}
+                    accountHandle={item.twitter_handle}
                     tweet={item.text}
                     datetime={item.datetime}
+                    retweetCount={item.retweet_count}
+                    favoriteCount={item.favorite_count}
                   />
                 );
               })}
