@@ -37,7 +37,6 @@ const MainScreen = (props) => {
   };
 
   const handleCommunitySelectionChange = (event, newValue) => {
-    console.log(newValue);
     newValue === 0
       ? setSelectedCommunity("")
       : setSelectedCommunity(Number(newValue - 1));
@@ -82,8 +81,6 @@ const MainScreen = (props) => {
   const handleNextCommunity = () => {
     setNewCommunityValue(1);
   };
-
-  console.log(inputedHashtag);
 
   return (
     <>

@@ -72,7 +72,6 @@ const NetworkViz = (props) => {
           node.links.forEach((link) => highlightLinks.add(link));
         }
       }
-      console.log(highlightLinks);
       setHoverNode(node || null);
       updateHighlight();
     }
