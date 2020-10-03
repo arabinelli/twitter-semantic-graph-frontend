@@ -60,16 +60,16 @@ function App() {
     setInputedHashtag(
       typedHashtag.split(" ").map((item) => {
         return item.startsWith("#")
-          ? item.replace("\n", "")
-          : "#" + item.replace("\n", "");
+          ? item.replaceAll("\n", "")
+          : "#" + item.replaceAll("\n", "");
       })
     );
     setInputedLanguage(language);
     let data = await fetchGraphData(
       typedHashtag.split(" ").map((item) => {
         return item.startsWith("#")
-          ? item.replace("\n", "")
-          : "#" + item.replace("\n", "");
+          ? item.replaceAll("\n", "")
+          : "#" + item.replaceAll("\n", "");
       }),
       language,
       setError
