@@ -92,7 +92,7 @@ const AppDrawer = (props) => {
   };
 
   const handleChangeLanguage = (event) => {
-    setFormState({ ...formState, ["language"]: event.target.value });
+    setFormState({ ...formState, language: event.target.value });
   };
 
   return (

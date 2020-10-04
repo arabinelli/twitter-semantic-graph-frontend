@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useHistory, Route, Switch } from "react-router-dom";
+import { useLocation, Route, Switch } from "react-router-dom";
 import "./App.css";
 import AppNavigation from "./components/appNavigation/appNavigation";
 import fetchGraphData from "./services/fetchBaseData";
@@ -52,7 +52,6 @@ function App() {
   };
 
   const handleFormSubmit = async (event, values) => {
-    console.log(values);
     setDataLoaded(false);
     event.preventDefault();
     setFormIsSubmitted(true);

@@ -1,10 +1,8 @@
-import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import React from "react";
+import { useHistory } from "react-router-dom";
 import "./privacyPolicy.css";
 
-const PrivacyPolicy = (props) => {
-  const [isModal] = useState(true);
-
+const PrivacyPolicy = () => {
   let history = useHistory();
 
   return (
