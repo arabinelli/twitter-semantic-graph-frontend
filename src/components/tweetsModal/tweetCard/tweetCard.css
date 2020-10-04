@@ -5,11 +5,14 @@ p {
 
 .user-handle {
   color: gray;
+  font-size: 14px;
+  margin-top: 0px;
 }
 
 .account-name {
   font-weight: bold;
   margin-top: 10px;
+  margin-bottom: 0px;
 }
 
 .tweet {
@@ -21,6 +24,7 @@ p {
 .datetime {
   margin-top: 10px;
   color: gray;
+  font-style: italic;
 }
 
 .card {

@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation, Route, Switch } from "react-router-dom";
 import "./App.css";
-import AppHeader from "./components/appHeader/appHeader";
-import AppDrawer from "./components/drawer/drawer";
+import AppNavigation from "./components/appNavigation/appNavigation";
 import fetchGraphData from "./services/fetchBaseData";
 import MainScreen from "./mainScreen";
 import ErrorScreen from "./components/errorScreen/errorScreen";
+import NotFound from "./components/notFound/notFound";
+import PrivacyPolicy from "./components/privacyPolicy/privacyPolicy";
+import trackUsage from "./services/analytics";
+import preprocessHashtags from "./utils/preprocessHashtags";
+import Cookies from "js-cookie";
 
 import { useGlobal, setGlobal } from "reactn";
 
@@ -17,8 +22,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 setGlobal({
-  inputedHashtag: "",
-  inputedLanguage: "",
   hasError: false,
 });
 
@@ -28,50 +31,35 @@ function App() {
     graph_data: { nodes: [], links: [] },
     communities: [],
   });
-  const [typedHashtag, setTypedHashtag] = useState("");
-  const [isMenuOpen, setMenuOpen] = useState(false);
-  const [language, setLanguage] = useState("");
   const [dataHasLoaded, setDataLoaded] = useState(false);
-  // const [selectedCommunity, setSelectedCommunity] = useState("");
+  const [cookiesAccepted, setcookiesAccepted] = useState(
+    Cookies.get("rcl_statistics_consent") ? true : false
+  );
 
-  const [inputedHashtag, setInputedHashtag] = useGlobal("inputedHashtag");
-  const [inputedLanguage, setInputedLanguage] = useGlobal("inputedLanguage");
+  const [inputedHashtag, setInputedHashtag] = useState("");
+  const [inputedLanguage, setInputedLanguage] = useState("");
   const [hasError, setError] = useGlobal("hasError");
 
   const classes = useStyles();
+  let location = useLocation("/");
 
-  const toggleDrawer = () => {
-    setMenuOpen(!isMenuOpen);
+  useEffect(() => {
+    trackUsage();
+  }, [location, cookiesAccepted]);
+
+  const handleCookieAcceptance = () => {
+    setcookiesAccepted(true);
   };
 
-  const handleLanguageChoice = (event) => {
-    setLanguage(event.target.value);
-  };
-
-  const handleHashtagChange = (event) => {
-    setTypedHashtag(event.target.value);
-  };
-
-  const handleFormSubmit = async (event) => {
+  const handleFormSubmit = async (event, values) => {
     setDataLoaded(false);
     event.preventDefault();
     setFormIsSubmitted(true);
-    toggleDrawer();
-    setInputedHashtag(
-      typedHashtag.split(" ").map((item) => {
-        return item.startsWith("#")
-          ? item.replaceAll("\n", "")
-          : "#" + item.replaceAll("\n", "");
-      })
-    );
-    setInputedLanguage(language);
+    setInputedHashtag(preprocessHashtags(values.hashtags));
+    setInputedLanguage(values.language);
     let data = await fetchGraphData(
-      typedHashtag.split(" ").map((item) => {
-        return item.startsWith("#")
-          ? item.replaceAll("\n", "")
-          : "#" + item.replaceAll("\n", "");
-      }),
-      language,
+      preprocessHashtags(values.hashtags),
+      values.language,
       setError
     ).then((data) => {
       return data;
@@ -82,25 +70,38 @@ function App() {
 
   return (
     <div className={classes.root}>
-      <AppHeader isMenuOpen={isMenuOpen} toggleDrawerFunction={toggleDrawer} />
-      <AppDrawer
-        isMenuOpen={isMenuOpen}
-        toggleDrawerFunction={toggleDrawer}
-        handleFormSubmit={handleFormSubmit}
-        typedHashtag={typedHashtag}
-        handleHashtagChange={handleHashtagChange}
-        language={language}
-        handleLanguageChoice={handleLanguageChoice}
-      />
+      <AppNavigation handleFormSubmit={handleFormSubmit} />
       {hasError ? (
         <ErrorScreen />
       ) : (
-        <MainScreen
-          dataHasLoaded={dataHasLoaded}
-          formIsSubmitted={formIsSubmitted}
-          graphData={graphData.graph_data}
-          communities={graphData.communities}
-        />
+        <>
+          <Switch
+            location={
+              location.pathname === "/privacy" ? { pathname: "/" } : location
+            }
+          >
+            <Route
+              exact
+              path="/"
+              component={() => (
+                <MainScreen
+                  dataHasLoaded={dataHasLoaded}
+                  formIsSubmitted={formIsSubmitted}
+                  graphData={graphData.graph_data}
+                  communities={graphData.communities}
+                  inputedHashtag={inputedHashtag}
+                  inputedLanguage={inputedLanguage}
+                  handleCookieAcceptance={handleCookieAcceptance}
+                />
+              )}
+            />
+            <Route component={NotFound} />
+          </Switch>
+
+          {location.pathname === "/privacy" && (
+            <Route path="/privacy" component={() => <PrivacyPolicy />} />
+          )}
+        </>
       )}
     </div>
   );

@@ -26,7 +26,6 @@ const TweetModal = (props) => {
             </div>
             <div className="tweet-modal-main body">
               {props.tweets.map((item) => {
-                console.log(item.key);
                 return (
                   // <Tweet
                   //   tweetId={item.key}
