@@ -87,8 +87,12 @@ const AppDrawer = (props) => {
     },
   ];
 
-  const handleChange = (event) => {
+  const handleChangeHashtag = (event) => {
     setFormState({ ...formState, [event.target.id]: event.target.value });
+  };
+
+  const handleChangeLanguage = (event) => {
+    setFormState({ ...formState, ["language"]: event.target.value });
   };
 
   return (
@@ -110,6 +114,7 @@ const AppDrawer = (props) => {
         noValidate
         autoComplete="off"
         onSubmit={(event) => {
+          props.toggleDrawerFunction();
           props.handleFormSubmit(event, formState);
         }}
       >
@@ -119,19 +124,16 @@ const AppDrawer = (props) => {
             id="hashtags"
             label="Hashtags"
             multiline
-            //value={props.typedHashtag}
-            //onChange={props.handleHashtagChange}
-            onChange={handleChange}
+            onChange={handleChangeHashtag}
           />
         </div>
         <div className={classes.inputFields}>
           <TextField
-            id="language"
             select
+            id="language"
+            value={formState.language}
             label="Language"
-            //value={props.language}
-            //onChange={props.handleLanguageChoice}
-            onChange={handleChange}
+            onChange={handleChangeLanguage}
             helperText="Select the language you're interested in"
           >
             {languages.map((option) => (

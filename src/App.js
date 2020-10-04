@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useHistory, Route, Switch } from "react-router-dom";
 import "./App.css";
-import AppHeader from "./components/appHeader/appHeader";
-import AppDrawer from "./components/drawer/drawer";
+import AppNavigation from "./components/appNavigation/appNavigation";
 import fetchGraphData from "./services/fetchBaseData";
 import MainScreen from "./mainScreen";
 import ErrorScreen from "./components/errorScreen/errorScreen";
@@ -30,7 +29,6 @@ function App() {
     graph_data: { nodes: [], links: [] },
     communities: [],
   });
-  const [isMenuOpen, setMenuOpen] = useState(false);
   const [dataHasLoaded, setDataLoaded] = useState(false);
   const [thisLocation, setThisLocation] = useState("");
   // const [selectedCommunity, setSelectedCommunity] = useState("");
@@ -51,8 +49,8 @@ function App() {
     setThisLocation(location);
   }, [location]);
 
-  const toggleDrawer = () => {
-    setMenuOpen(!isMenuOpen);
+  const handleCookieAcceptance = () => {
+    setcookiesAccepted(true);
   };
 
   const handleFormSubmit = async (event, values) => {
@@ -60,22 +58,11 @@ function App() {
     setDataLoaded(false);
     event.preventDefault();
     setFormIsSubmitted(true);
-    toggleDrawer();
-    setInputedHashtag(
-      values.hashtags.split(" ").map((item) => {
-        return item.startsWith("#")
-          ? item.replaceAll("\n", "")
-          : "#" + item.replaceAll("\n", "");
-      })
-    );
+    setInputedHashtag(preprocessHashtags(values.hashtags));
     setInputedLanguage(values.language);
     let data = await fetchGraphData(
-      values.hashtags.split(" ").map((item) => {
-        return item.startsWith("#")
-          ? item.replaceAll("\n", "")
-          : "#" + item.replaceAll("\n", "");
-      }),
-      language,
+      preprocessHashtags(values.hashtags),
+      values.language,
       setError
     ).then((data) => {
       return data;
@@ -86,12 +73,7 @@ function App() {
 
   return (
     <div className={classes.root}>
-      <AppHeader isMenuOpen={isMenuOpen} toggleDrawerFunction={toggleDrawer} />
-      <AppDrawer
-        isMenuOpen={isMenuOpen}
-        toggleDrawerFunction={toggleDrawer}
-        handleFormSubmit={handleFormSubmit}
-      />
+      <AppNavigation handleFormSubmit={handleFormSubmit} />
       {hasError ? (
         <ErrorScreen />
       ) : (
