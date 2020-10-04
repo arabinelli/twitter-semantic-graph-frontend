@@ -2,7 +2,7 @@ import React from "react";
 import "./tweetsModal.css";
 import TweetCard from "./tweetCard/tweetCard";
 import { Ring } from "react-spinners-css";
-import { Tweet } from "react-twitter-widgets";
+// import { Tweet } from "react-twitter-widgets";
 
 const TweetModal = (props) => {
   const showHideClassName = props.isModalOpen
