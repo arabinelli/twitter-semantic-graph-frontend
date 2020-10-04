@@ -8,6 +8,8 @@ import ErrorScreen from "./components/errorScreen/errorScreen";
 import NotFound from "./components/notFound/notFound";
 import PrivacyPolicy from "./components/privacyPolicy/privacyPolicy";
 import trackUsage from "./services/analytics";
+import preprocessHashtags from "./utils/preprocessHashtags";
+import Cookies from "js-cookie";
 
 import { useGlobal, setGlobal } from "reactn";
 
@@ -30,8 +32,9 @@ function App() {
     communities: [],
   });
   const [dataHasLoaded, setDataLoaded] = useState(false);
-  const [thisLocation, setThisLocation] = useState("");
-  // const [selectedCommunity, setSelectedCommunity] = useState("");
+  const [cookiesAccepted, setcookiesAccepted] = useState(
+    Cookies.get("rcl_statistics_consent") ? true : false
+  );
 
   const [inputedHashtag, setInputedHashtag] = useState("");
   const [inputedLanguage, setInputedLanguage] = useState("");
@@ -39,15 +42,10 @@ function App() {
 
   const classes = useStyles();
   let location = useLocation("/");
-  let history = useHistory();
 
   useEffect(() => {
     trackUsage();
-  }, [location]);
-
-  useEffect(() => {
-    setThisLocation(location);
-  }, [location]);
+  }, [location, cookiesAccepted]);
 
   const handleCookieAcceptance = () => {
     setcookiesAccepted(true);
@@ -80,7 +78,7 @@ function App() {
         <>
           <Switch
             location={
-              thisLocation.pathname === "/privacy"
+              location.pathname === "/privacy"
                 ? { pathname: "/" }
                 : thisLocation
             }
@@ -96,13 +94,14 @@ function App() {
                   communities={graphData.communities}
                   inputedHashtag={inputedHashtag}
                   inputedLanguage={inputedLanguage}
+                  handleCookieAcceptance={handleCookieAcceptance}
                 />
               )}
             />
             <Route component={NotFound} />
           </Switch>
 
-          {thisLocation.pathname === "/privacy" && (
+          {location.pathname === "/privacy" && (
             <Route path="/privacy" component={() => <PrivacyPolicy />} />
           )}
         </>

@@ -1,7 +1,7 @@
 import React from "react";
 import { CookieBanner } from "@palmabit/react-cookie-law";
 
-const CookieConsentBanner = () => {
+const CookieConsentBanner = (props) => {
   return (
     <CookieBanner
       message={
@@ -12,7 +12,7 @@ const CookieConsentBanner = () => {
       policyLink="/privacy"
       showPreferencesOption={false}
       showMarketingOption={false}
-      debug={true}
+      onAccept={props.handleCookieAcceptance}
       styles={{
         dialog: {
           position: "fixed",

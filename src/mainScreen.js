@@ -122,7 +122,9 @@ const MainScreen = (props) => {
         // change props to searchResults
         <SplashScreen />
       )}
-      <CookieConsentBanner />
+      <CookieConsentBanner
+        handleCookieAcceptance={props.handleCookieAcceptance}
+      />
     </>
   );
 };
