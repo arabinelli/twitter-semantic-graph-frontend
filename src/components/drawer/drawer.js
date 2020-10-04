@@ -12,6 +12,11 @@ import { makeStyles } from "@material-ui/core/styles";
 const AppDrawer = (props) => {
   const drawerWidth = "20vw";
 
+  const [formState, setFormState] = React.useState({
+    hashtags: "",
+    language: "",
+  });
+
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -82,6 +87,10 @@ const AppDrawer = (props) => {
     },
   ];
 
+  const handleChange = (event) => {
+    setFormState({ ...formState, [event.target.id]: event.target.value });
+  };
+
   return (
     <Drawer
       anchor="left"
@@ -100,25 +109,29 @@ const AppDrawer = (props) => {
         className={classes.textFields}
         noValidate
         autoComplete="off"
-        onSubmit={props.handleFormSubmit}
+        onSubmit={(event) => {
+          props.handleFormSubmit(event, formState);
+        }}
       >
         <div className={classes.inputFields}>
           <TextField
             required
-            id="standard-basic"
+            id="hashtags"
             label="Hashtags"
             multiline
-            value={props.typedHashtag}
-            onChange={props.handleHashtagChange}
+            //value={props.typedHashtag}
+            //onChange={props.handleHashtagChange}
+            onChange={handleChange}
           />
         </div>
         <div className={classes.inputFields}>
           <TextField
-            id="select-language"
+            id="language"
             select
             label="Language"
-            value={props.language}
-            onChange={props.handleLanguageChoice}
+            //value={props.language}
+            //onChange={props.handleLanguageChoice}
+            onChange={handleChange}
             helperText="Select the language you're interested in"
           >
             {languages.map((option) => (
@@ -131,13 +144,13 @@ const AppDrawer = (props) => {
         <div className={classes.inputFields}>
           <Button
             className={
-              props.typedHashtag === ""
+              formState.hashtags === ""
                 ? classes.drawer["& .Mui-disabled"]
                 : classes.drawer.button
             }
             variant="contained"
             type="submit"
-            disabled={props.typedHashtag === "" ? true : false}
+            disabled={formState.hashtags === "" ? true : false}
           >
             Get Graph!
           </Button>

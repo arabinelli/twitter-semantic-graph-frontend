@@ -21,8 +21,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 setGlobal({
-  inputedHashtag: "",
-  inputedLanguage: "",
   hasError: false,
 });
 
@@ -32,14 +30,13 @@ function App() {
     graph_data: { nodes: [], links: [] },
     communities: [],
   });
-  const [typedHashtag, setTypedHashtag] = useState("");
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const [language, setLanguage] = useState("");
   const [dataHasLoaded, setDataLoaded] = useState(false);
+  const [thisLocation, setThisLocation] = useState("");
   // const [selectedCommunity, setSelectedCommunity] = useState("");
 
-  const [inputedHashtag, setInputedHashtag] = useGlobal("inputedHashtag");
-  const [inputedLanguage, setInputedLanguage] = useGlobal("inputedLanguage");
+  const [inputedHashtag, setInputedHashtag] = useState("");
+  const [inputedLanguage, setInputedLanguage] = useState("");
   const [hasError, setError] = useGlobal("hasError");
 
   const classes = useStyles();
@@ -50,33 +47,30 @@ function App() {
     trackUsage();
   }, [location]);
 
+  useEffect(() => {
+    setThisLocation(location);
+  }, [location]);
+
   const toggleDrawer = () => {
     setMenuOpen(!isMenuOpen);
   };
 
-  const handleLanguageChoice = (event) => {
-    setLanguage(event.target.value);
-  };
-
-  const handleHashtagChange = (event) => {
-    setTypedHashtag(event.target.value);
-  };
-
-  const handleFormSubmit = async (event) => {
+  const handleFormSubmit = async (event, values) => {
+    console.log(values);
     setDataLoaded(false);
     event.preventDefault();
     setFormIsSubmitted(true);
     toggleDrawer();
     setInputedHashtag(
-      typedHashtag.split(" ").map((item) => {
+      values.hashtags.split(" ").map((item) => {
         return item.startsWith("#")
           ? item.replaceAll("\n", "")
           : "#" + item.replaceAll("\n", "");
       })
     );
-    setInputedLanguage(language);
+    setInputedLanguage(values.language);
     let data = await fetchGraphData(
-      typedHashtag.split(" ").map((item) => {
+      values.hashtags.split(" ").map((item) => {
         return item.startsWith("#")
           ? item.replaceAll("\n", "")
           : "#" + item.replaceAll("\n", "");
@@ -97,10 +91,6 @@ function App() {
         isMenuOpen={isMenuOpen}
         toggleDrawerFunction={toggleDrawer}
         handleFormSubmit={handleFormSubmit}
-        typedHashtag={typedHashtag}
-        handleHashtagChange={handleHashtagChange}
-        language={language}
-        handleLanguageChoice={handleLanguageChoice}
       />
       {hasError ? (
         <ErrorScreen />
@@ -108,7 +98,9 @@ function App() {
         <>
           <Switch
             location={
-              location.pathname === "/privacy" ? { pathname: "/" } : location
+              thisLocation.pathname === "/privacy"
+                ? { pathname: "/" }
+                : thisLocation
             }
           >
             <Route
@@ -120,13 +112,15 @@ function App() {
                   formIsSubmitted={formIsSubmitted}
                   graphData={graphData.graph_data}
                   communities={graphData.communities}
+                  inputedHashtag={inputedHashtag}
+                  inputedLanguage={inputedLanguage}
                 />
               )}
             />
             <Route component={NotFound} />
           </Switch>
 
-          {location.pathname === "/privacy" && (
+          {thisLocation.pathname === "/privacy" && (
             <Route path="/privacy" component={() => <PrivacyPolicy />} />
           )}
         </>

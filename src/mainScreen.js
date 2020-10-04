@@ -17,8 +17,6 @@ const MainScreen = (props) => {
   const [selectedCommunity, setSelectedCommunity] = useState("");
   const [showExtendedTopics, setShowExtendedTopics] = useState(false);
 
-  const [inputedHashtag] = useGlobal("inputedHashtag");
-  const [inputedLanguage] = useGlobal("inputedLanguage");
   const [hasError, setError] = useGlobal("hasError");
 
   const handleNodeClick = async (node, event) => {
@@ -26,8 +24,8 @@ const MainScreen = (props) => {
     setTweetModalOpen(isTweetModalOpen ? false : true);
     setSelectedHashtag(node.name);
     let data = await fetchHashtagTweets(
-      inputedHashtag,
-      inputedLanguage,
+      props.inputedHashtag,
+      props.inputedLanguage,
       node.name,
       setError
     ).then((data) => {
@@ -88,8 +86,8 @@ const MainScreen = (props) => {
       {props.formIsSubmitted ? (
         props.dataHasLoaded ? (
           <div>
-            {inputedHashtag.length === 1 ? (
-              <GraphTitle hashtag={inputedHashtag[0]} />
+            {props.inputedHashtag.length === 1 ? (
+              <GraphTitle hashtag={props.inputedHashtag[0]} />
             ) : (
               <div></div>
             )}
