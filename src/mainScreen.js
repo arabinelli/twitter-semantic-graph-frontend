@@ -7,6 +7,7 @@ import TweetModal from "./components/tweetsModal/tweetsModal";
 import TopicController from "./components/topicController/topicController";
 import fetchHashtagTweets from "./services/fetchHashtagTweets";
 import GraphTitle from "./components/graphTitle/graphTitle";
+import CookieConsentBanner from "./components/cookieConsent/cookieConsent";
 
 const MainScreen = (props) => {
   const [isTweetModalOpen, setTweetModalOpen] = useState(false);
@@ -123,6 +124,7 @@ const MainScreen = (props) => {
         // change props to searchResults
         <SplashScreen />
       )}
+      <CookieConsentBanner />
     </>
   );
 };

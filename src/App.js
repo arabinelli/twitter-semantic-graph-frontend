@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useHistory, Route, Switch } from "react-router-dom";
 import "./App.css";
 import AppHeader from "./components/appHeader/appHeader";
 import AppDrawer from "./components/drawer/drawer";
@@ -8,6 +8,7 @@ import MainScreen from "./mainScreen";
 import ErrorScreen from "./components/errorScreen/errorScreen";
 import NotFound from "./components/notFound/notFound";
 import PrivacyPolicy from "./components/privacyPolicy/privacyPolicy";
+import trackUsage from "./services/analytics";
 
 import { useGlobal, setGlobal } from "reactn";
 
@@ -42,6 +43,12 @@ function App() {
   const [hasError, setError] = useGlobal("hasError");
 
   const classes = useStyles();
+  let location = useLocation("/");
+  let history = useHistory();
+
+  useEffect(() => {
+    trackUsage();
+  }, [location]);
 
   const toggleDrawer = () => {
     setMenuOpen(!isMenuOpen);
@@ -98,22 +105,31 @@ function App() {
       {hasError ? (
         <ErrorScreen />
       ) : (
-        <Switch>
-          <Route
-            exact
-            path="/"
-            component={() => (
-              <MainScreen
-                dataHasLoaded={dataHasLoaded}
-                formIsSubmitted={formIsSubmitted}
-                graphData={graphData.graph_data}
-                communities={graphData.communities}
-              />
-            )}
-          />
-          <Route path="/privacy" component={PrivacyPolicy} />
-          <Route component={NotFound} />
-        </Switch>
+        <>
+          <Switch
+            location={
+              location.pathname === "/privacy" ? { pathname: "/" } : location
+            }
+          >
+            <Route
+              exact
+              path="/"
+              component={() => (
+                <MainScreen
+                  dataHasLoaded={dataHasLoaded}
+                  formIsSubmitted={formIsSubmitted}
+                  graphData={graphData.graph_data}
+                  communities={graphData.communities}
+                />
+              )}
+            />
+            <Route component={NotFound} />
+          </Switch>
+
+          {location.pathname === "/privacy" && (
+            <Route path="/privacy" component={() => <PrivacyPolicy />} />
+          )}
+        </>
       )}
     </div>
   );
