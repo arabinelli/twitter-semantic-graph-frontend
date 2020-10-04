@@ -1,0 +1,10 @@
+.not-found {
+  position: absolute;
+  left: 45vw;
+  top: 50vh;
+  margin: auto;
+  color: white;
+  font-weight: 700;
+  font-size: 72px;
+  width: auto;
+}
