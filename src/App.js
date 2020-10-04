@@ -78,9 +78,7 @@ function App() {
         <>
           <Switch
             location={
-              location.pathname === "/privacy"
-                ? { pathname: "/" }
-                : thisLocation
+              location.pathname === "/privacy" ? { pathname: "/" } : location
             }
           >
             <Route
