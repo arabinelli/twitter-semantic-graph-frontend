@@ -5,7 +5,7 @@ const EmptyResponse = () => {
   return (
     <div className="error">
       <div className="text">
-        <h1>:O</h1>
+        <h1>👻</h1>
         <h3>Oh, wow! You've found an hashtag with...</h3>
         <h4>Zero Tweets!!!</h4>
         <p>Try again with a different one.</p>
