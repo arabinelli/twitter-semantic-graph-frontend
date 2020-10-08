@@ -2,18 +2,19 @@ const abortcontroller = new AbortController();
 const signal = abortcontroller.signal;
 const backendBaseUrl = process.env.REACT_APP_BACKEND_BASE_URL;
 
-const fetchAPI = async (url, payload) => {
+const fetchAPI = async (url, payload, setIsEmpty) => {
   const response = await fetch(url, payload);
-  return response.json();
+  if (response.status === 442) {
+    console.log(response.status);
+    setIsEmpty(true);
+  } else {
+    return response.json();
+  }
 };
 
-async function fetchGraphData(hashtags, language, setError) {
+async function fetchGraphData(hashtags, language, setError, setIsEmpty) {
   const url = backendBaseUrl + "/get-graph";
-  // const hashtagsList = hashtags.split(" ");
   const requestBody = {
-    // hashtags: hashtagsList.map((item) => {
-    //   return item.startsWith("#") ? item : "#" + item;
-    // }),
     hashtags: hashtags,
   };
 
@@ -33,7 +34,7 @@ async function fetchGraphData(hashtags, language, setError) {
     signal: signal,
   };
 
-  const graphData = await fetchAPI(url, payload)
+  const graphData = await fetchAPI(url, payload, setIsEmpty)
     .then((data) => {
       data.graph_data.links.forEach((link) => {
         const a = data.graph_data.nodes[link.source];

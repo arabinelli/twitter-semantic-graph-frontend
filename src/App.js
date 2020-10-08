@@ -5,6 +5,7 @@ import AppNavigation from "./components/appNavigation/appNavigation";
 import fetchGraphData from "./services/fetchBaseData";
 import MainScreen from "./mainScreen";
 import ErrorScreen from "./components/errorScreen/errorScreen";
+import EmptyResponse from "./components/emptyResponse/emptyResponse";
 import NotFound from "./components/notFound/notFound";
 import PrivacyPolicy from "./components/privacyPolicy/privacyPolicy";
 import trackUsage from "./services/analytics";
@@ -38,6 +39,7 @@ function App() {
 
   const [inputedHashtag, setInputedHashtag] = useState("");
   const [inputedLanguage, setInputedLanguage] = useState("");
+  const [isEmpty, setIsEmpty] = useState(false);
   const [hasError, setError] = useGlobal("hasError");
 
   const classes = useStyles();
@@ -53,6 +55,8 @@ function App() {
 
   const handleFormSubmit = async (event, values) => {
     setDataLoaded(false);
+    setError(false);
+    setIsEmpty(false);
     event.preventDefault();
     setFormIsSubmitted(true);
     setInputedHashtag(preprocessHashtags(values.hashtags));
@@ -60,7 +64,8 @@ function App() {
     let data = await fetchGraphData(
       preprocessHashtags(values.hashtags),
       values.language,
-      setError
+      setError,
+      setIsEmpty
     ).then((data) => {
       return data;
     });
@@ -71,8 +76,12 @@ function App() {
   return (
     <div className={classes.root}>
       <AppNavigation handleFormSubmit={handleFormSubmit} />
-      {hasError ? (
-        <ErrorScreen />
+      {hasError | isEmpty ? (
+        isEmpty ? (
+          <EmptyResponse />
+        ) : (
+          <ErrorScreen />
+        )
       ) : (
         <>
           <Switch
